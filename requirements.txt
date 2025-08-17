@@ -1,23 +1,38 @@
-academictorrents==2.3.3
-albumentations==1.4.3
-clip==0.2.0
-datasets==2.18.0
+# PyTorch and related
+torch==1.13.0
+torchvision==0.14.0
+torchaudio==0.13.0
+
+# Core packages
+numpy==1.24.4
+scipy>=1.10.0,<1.11
+scikit-image==0.20.0
+Pillow==10.3.0
+matplotlib==3.7.5
+
+# Deep learning & utilities
+pytorch_lightning==2.2.1
+transformers==4.34.0
 diffusers==0.11.1
 einops==0.4.1
-ftfy==6.2.0
-huggingface_hub==0.22.2
-matplotlib==3.7.5
-more_itertools==10.2.0
-natsort==8.4.0
-numpy==1.24.4
-omegaconf==2.3.0
-Pillow==10.3.0
-pycryptodome==3.20.0
-pytorch_lightning==2.2.1
-PyYAML==6.0.1
-regex==2023.12.25
-Requests==2.31.0
 timm==0.5.4
-tqdm==4.66.2
-transformers==4.34.0
+kornia==0.6.4
+albumentations==1.4.3
+ftfy==6.2.0
+omegaconf==2.3.0
+
+# Datasets & repositories
+datasets==2.18.0
+huggingface_hub==0.22.2
+academictorrents==2.3.3
+clip==0.2.0
+
+# Utilities
+pycryptodome==3.20.0
+requests==2.31.0
+regex==2023.12.25
+PyYAML==6.0.1
 typing_extensions==4.11.0
+natsort==8.4.0
+more_itertools==10.2.0
+tqdm==4.66.2

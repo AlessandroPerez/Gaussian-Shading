@@ -31,14 +31,7 @@ conda activate gs
 
 #### Step 3: Downloading Packages via Conda
 ```
-# For CPU-only:
-conda install -c pytorch pytorch==1.13.0 torchvision==0.14.0 cpuonly -y
-
-# For GPU, replace `cpuonly` with CUDA version, e.g.:
-# conda install -c pytorch pytorch==1.13.0 torchvision==0.14.0 cudatoolkit=12.1 -y
-
-# Other compiled packages
-conda install -c conda-forge horovod==0.28.1 scipy>=1.10.0,<1.11 scikit-image==0.20.0 kornia==0.6.4 -y
+conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
 ```
 
 #### Step 4: Install remaining Pytohon-only packages via pip
