@@ -15,12 +15,34 @@ deterioration in model performance. The embedding process encompasses three prim
 
 ## Getting Started
 
-### Prerequisites
+### Setting up evironment
+
+#### Step 1: Cloning the repo
 ```
-git clone https://github.com/bsmhmmlf/Gaussian-Shading.git
+git clone https://github.com/AlessandroPerez/Gaussian-Shading.git
 cd Gaussian-Shading
-conda create -n gs python=3.8
+```
+
+#### Step 2: Create Conda environment
+```
+conda create -n gs python=3.8 -y
 conda activate gs
+```
+
+#### Step 3: Downloading Packages via Conda
+```
+# For CPU-only:
+conda install -c pytorch pytorch==1.13.0 torchvision==0.14.0 cpuonly -y
+
+# For GPU, replace `cpuonly` with CUDA version, e.g.:
+# conda install -c pytorch pytorch==1.13.0 torchvision==0.14.0 cudatoolkit=12.1 -y
+
+# Other compiled packages
+conda install -c conda-forge horovod==0.28.1 scipy>=1.10.0,<1.11 scikit-image==0.20.0 kornia==0.6.4 -y
+```
+
+#### Step 4: Install remaining Pytohon-only packages via pip
+```
 pip install -r requirements.txt
 ```
 
