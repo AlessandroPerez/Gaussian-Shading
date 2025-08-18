@@ -163,6 +163,8 @@ cython_debug/
 *.jpg
 *.png
 *.gif
+report.txt
+*results.json
 
 # Keep important existing images
 !fig/framework.png

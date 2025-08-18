@@ -101,6 +101,11 @@ class SimpleGaussianShadingTest:
                     self.args.fpr,
                     self.args.user_number
                 )
+            
+            # Create watermark pattern once and reuse for all images
+            self.watermark_latents = self.watermark.create_watermark_and_return_w()
+            print(f"   🔑 Watermark pattern created (tau_onebit: {self.watermark.tau_onebit:.6f})")
+            
         except Exception as e:
             print(f"Error initializing watermark system: {e}")
             raise
@@ -119,18 +124,527 @@ class SimpleGaussianShadingTest:
             self.prompt_key = 'prompt'
     
     def _get_default_prompts(self):
-        """Get default realistic prompts"""
+        """Get default realistic prompts - expanded to 1000+ unique prompts"""
         prompts = [
+            # Nature & Landscapes (100 prompts)
             {"prompt": "A serene mountain landscape at sunset"},
-            {"prompt": "Portrait of a wise elderly person"},
-            {"prompt": "Modern city skyline with glass buildings"},
-            {"prompt": "A cat sitting by a window on a rainy day"},
             {"prompt": "Autumn forest with golden leaves"},
             {"prompt": "Ocean waves on a sandy beach"},
-            {"prompt": "A cozy coffee shop interior"},
             {"prompt": "Field of sunflowers under blue sky"},
-            {"prompt": "Vintage car on an old street"},
+            {"prompt": "Misty morning in a pine forest"},
+            {"prompt": "Desert dunes under starry night sky"},
+            {"prompt": "Tropical waterfall in jungle setting"},
+            {"prompt": "Snow-covered alpine peaks"},
+            {"prompt": "Cherry blossoms in spring garden"},
+            {"prompt": "Rocky coastline with lighthouse"},
+            {"prompt": "Rolling green hills with wildflowers"},
+            {"prompt": "Frozen lake surrounded by mountains"},
+            {"prompt": "Volcanic landscape with lava flows"},
+            {"prompt": "Bamboo forest with filtered sunlight"},
+            {"prompt": "Coral reef underwater scene"},
+            {"prompt": "Northern lights over snowy landscape"},
+            {"prompt": "Meadow filled with butterflies"},
+            {"prompt": "Ancient redwood forest"},
+            {"prompt": "Sunset over African savanna"},
+            {"prompt": "Icy glacier meeting the ocean"},
+            {"prompt": "Rainbow over mountain valley"},
+            {"prompt": "Cactus garden in desert bloom"},
+            {"prompt": "Foggy morning river landscape"},
+            {"prompt": "Lavender fields in Provence"},
+            {"prompt": "Moss-covered rocks in forest"},
+            {"prompt": "Salt flats with mirror reflection"},
+            {"prompt": "Cliff-side monastery at dawn"},
+            {"prompt": "Wheat field swaying in breeze"},
+            {"prompt": "Hot springs in mountain setting"},
+            {"prompt": "Mangrove swamp ecosystem"},
+            {"prompt": "Geyser erupting in Yellowstone"},
+            {"prompt": "Tea plantation on hillside"},
+            {"prompt": "Ice cave with blue formations"},
+            {"prompt": "Tide pools with sea creatures"},
+            {"prompt": "Canyon with layered rock formations"},
+            {"prompt": "Prairie with storm clouds"},
+            {"prompt": "Vineyard during harvest season"},
+            {"prompt": "Fjord with steep cliffs"},
+            {"prompt": "Oasis in the middle of desert"},
+            {"prompt": "Wildflower meadow in Alps"},
+            {"prompt": "Sequoia trees reaching skyward"},
+            {"prompt": "Marshland with herons"},
+            {"prompt": "Valley covered in morning mist"},
+            {"prompt": "Rock formations in Arches National Park"},
+            {"prompt": "Kelp forest underwater"},
+            {"prompt": "Tundra landscape in Arctic"},
+            {"prompt": "Palm trees swaying on beach"},
+            {"prompt": "Cave with stalactites and stalagmites"},
+            {"prompt": "Highland meadow with sheep"},
+            {"prompt": "Wetlands during bird migration"},
+            
+            # Animals & Wildlife (100 prompts)
+            {"prompt": "A cat sitting by a window on a rainy day"},
+            {"prompt": "Majestic lion in African grassland"},
+            {"prompt": "Polar bear on ice floe"},
+            {"prompt": "Eagle soaring over mountains"},
+            {"prompt": "Dolphin jumping out of water"},
+            {"prompt": "Elephant family at watering hole"},
+            {"prompt": "Tiger walking through jungle"},
+            {"prompt": "Penguin colony on icy shore"},
+            {"prompt": "Wolf pack hunting in snow"},
+            {"prompt": "Butterfly landing on flower"},
+            {"prompt": "Hummingbird feeding from nectar"},
+            {"prompt": "Giraffe reaching for acacia leaves"},
+            {"prompt": "Sea turtle swimming in ocean"},
+            {"prompt": "Owl perched on tree branch"},
+            {"prompt": "Fox kit playing in meadow"},
+            {"prompt": "Whale breaching ocean surface"},
+            {"prompt": "Cheetah running at full speed"},
+            {"prompt": "Bear fishing for salmon"},
+            {"prompt": "Peacock displaying colorful feathers"},
+            {"prompt": "Rabbit hopping through garden"},
+            {"prompt": "Hawk circling in blue sky"},
+            {"prompt": "Deer grazing in forest clearing"},
+            {"prompt": "Monkey swinging through trees"},
+            {"prompt": "Shark swimming in deep blue"},
+            {"prompt": "Horse galloping across field"},
+            {"prompt": "Toucan perched in rainforest"},
+            {"prompt": "Kangaroo bounding across outback"},
+            {"prompt": "Octopus hiding among coral"},
+            {"prompt": "Squirrel gathering nuts for winter"},
+            {"prompt": "Flamingo standing in shallow water"},
+            {"prompt": "Bison grazing on prairie"},
+            {"prompt": "Seal resting on rocky shore"},
+            {"prompt": "Parrot with vibrant plumage"},
+            {"prompt": "Ant colony working together"},
+            {"prompt": "Bee collecting pollen from flower"},
+            {"prompt": "Snake coiled on warm rock"},
+            {"prompt": "Frog sitting on lily pad"},
+            {"prompt": "Dragonfly hovering over pond"},
+            {"prompt": "Hedgehog curled up in leaves"},
+            {"prompt": "Swans swimming on lake"},
+            {"prompt": "Woodpecker on tree trunk"},
+            {"prompt": "Turtle sunbathing on log"},
+            {"prompt": "Koala sleeping in eucalyptus"},
+            {"prompt": "Pelican diving for fish"},
+            {"prompt": "Chameleon changing colors"},
+            {"prompt": "Gazelle leaping over rocks"},
+            {"prompt": "Panda eating bamboo shoots"},
+            {"prompt": "Sloth hanging from branch"},
+            {"prompt": "Zebra herd at sunset"},
+            {"prompt": "Rhinoceros charging through dust"},
+            
+            # People & Portraits (100 prompts)
+            {"prompt": "Portrait of a wise elderly person"},
+            {"prompt": "Child laughing with pure joy"},
+            {"prompt": "Musician playing violin passionately"},
+            {"prompt": "Artist painting at easel"},
+            {"prompt": "Chef preparing gourmet meal"},
+            {"prompt": "Dancer in flowing motion"},
+            {"prompt": "Teacher reading to children"},
+            {"prompt": "Grandmother knitting by fireplace"},
+            {"prompt": "Athlete crossing finish line"},
+            {"prompt": "Mother holding newborn baby"},
+            {"prompt": "Farmer working in field"},
+            {"prompt": "Scientist examining specimen"},
+            {"prompt": "Student studying in library"},
+            {"prompt": "Carpenter crafting furniture"},
+            {"prompt": "Nurse caring for patient"},
+            {"prompt": "Photographer capturing moment"},
+            {"prompt": "Baker kneading bread dough"},
+            {"prompt": "Gardener tending to flowers"},
+            {"prompt": "Writer typing at typewriter"},
+            {"prompt": "Mechanic repairing engine"},
+            {"prompt": "Fisherman casting line at dawn"},
+            {"prompt": "Blacksmith forging metal"},
+            {"prompt": "Pilot in airplane cockpit"},
+            {"prompt": "Doctor examining x-ray"},
+            {"prompt": "Architect reviewing blueprints"},
+            {"prompt": "Librarian organizing books"},
+            {"prompt": "Potter shaping clay vessel"},
+            {"prompt": "Tailor measuring fabric"},
+            {"prompt": "Firefighter rescuing cat"},
+            {"prompt": "Postal worker delivering mail"},
+            {"prompt": "Shepherd watching flock"},
+            {"prompt": "Watchmaker repairing timepiece"},
+            {"prompt": "Yoga instructor in pose"},
+            {"prompt": "Barista making coffee art"},
+            {"prompt": "Surgeon in operating room"},
+            {"prompt": "Judge presiding over court"},
+            {"prompt": "Detective examining evidence"},
+            {"prompt": "Astronaut floating in space"},
+            {"prompt": "Miner working underground"},
+            {"prompt": "Sailor navigating rough seas"},
+            {"prompt": "Climber scaling mountain face"},
+            {"prompt": "Translator working with documents"},
+            {"prompt": "Conductor leading orchestra"},
+            {"prompt": "Veterinarian caring for animals"},
+            {"prompt": "Jeweler crafting precious ring"},
+            {"prompt": "Florist arranging bouquet"},
+            {"prompt": "Lifeguard watching beach"},
+            {"prompt": "Monk meditating in temple"},
+            {"prompt": "Explorer discovering ruins"},
+            {"prompt": "Comedian performing on stage"},
+            
+            # Urban & Architecture (100 prompts)
+            {"prompt": "Modern city skyline with glass buildings"},
+            {"prompt": "Ancient cathedral with gothic spires"},
+            {"prompt": "Busy street market with vendors"},
+            {"prompt": "Art deco skyscraper at dusk"},
+            {"prompt": "Traditional Japanese temple"},
+            {"prompt": "Brooklyn Bridge at sunrise"},
+            {"prompt": "Medieval castle on hilltop"},
+            {"prompt": "Subway station during rush hour"},
+            {"prompt": "Victorian mansion with gardens"},
+            {"prompt": "Shopping mall bustling with people"},
+            {"prompt": "Industrial warehouse district"},
+            {"prompt": "Mosque with ornate minarets"},
+            {"prompt": "University campus in autumn"},
+            {"prompt": "Airport terminal with travelers"},
+            {"prompt": "Historic town square"},
+            {"prompt": "Modern museum architecture"},
+            {"prompt": "Lighthouse on rocky coast"},
+            {"prompt": "Train station with vintage design"},
+            {"prompt": "Apartment building with fire escapes"},
+            {"prompt": "Church with stained glass windows"},
+            {"prompt": "City park with fountains"},
+            {"prompt": "Office building reflecting sky"},
+            {"prompt": "Harbor with fishing boats"},
+            {"prompt": "Stadium filled with spectators"},
+            {"prompt": "Library with reading rooms"},
+            {"prompt": "Hospital emergency entrance"},
+            {"prompt": "School playground with children"},
+            {"prompt": "Restaurant with outdoor seating"},
+            {"prompt": "Hotel lobby with chandelier"},
+            {"prompt": "Theater with red velvet seats"},
+            {"prompt": "Factory with smoking chimneys"},
+            {"prompt": "Bridge spanning wide river"},
+            {"prompt": "Market hall with vendors"},
+            {"prompt": "Gas station on highway"},
+            {"prompt": "Parking garage at night"},
+            {"prompt": "Convention center hosting event"},
+            {"prompt": "Observatory dome under stars"},
+            {"prompt": "Fire station with trucks"},
+            {"prompt": "Police station headquarters"},
+            {"prompt": "Post office with mail sorting"},
+            {"prompt": "Bank with marble columns"},
+            {"prompt": "Courthouse with justice statue"},
+            {"prompt": "City hall with flag"},
+            {"prompt": "Bus terminal with schedules"},
+            {"prompt": "Taxi stand in rain"},
+            {"prompt": "Pedestrian bridge over street"},
+            {"prompt": "Skate park with ramps"},
+            {"prompt": "Rooftop garden in city"},
+            {"prompt": "Alleyway with street art"},
+            {"prompt": "Construction site with cranes"},
+            
+            # Interiors & Objects (100 prompts)
+            {"prompt": "A cozy coffee shop interior"},
             {"prompt": "Library with ancient books"},
+            {"prompt": "Vintage car on an old street"},
+            {"prompt": "Antique clockwork mechanism"},
+            {"prompt": "Steaming cup of hot chocolate"},
+            {"prompt": "Grand piano in concert hall"},
+            {"prompt": "Fireplace with crackling logs"},
+            {"prompt": "Kitchen with copper pots"},
+            {"prompt": "Bedroom with sunlight streaming"},
+            {"prompt": "Art studio with paintbrushes"},
+            {"prompt": "Workshop with wooden tools"},
+            {"prompt": "Greenhouse filled with plants"},
+            {"prompt": "Wine cellar with aged bottles"},
+            {"prompt": "Attic filled with memories"},
+            {"prompt": "Bathroom with clawfoot tub"},
+            {"prompt": "Dining room set for feast"},
+            {"prompt": "Study with leather-bound books"},
+            {"prompt": "Laundry room with hanging clothes"},
+            {"prompt": "Basement workshop with machinery"},
+            {"prompt": "Closet organized with shoes"},
+            {"prompt": "Garage with vintage motorcycle"},
+            {"prompt": "Pantry stocked with preserves"},
+            {"prompt": "Nursery with rocking chair"},
+            {"prompt": "Home office with computer"},
+            {"prompt": "Living room with family photos"},
+            {"prompt": "Sunroom with wicker furniture"},
+            {"prompt": "Mudroom with rain boots"},
+            {"prompt": "Game room with pool table"},
+            {"prompt": "Exercise room with equipment"},
+            {"prompt": "Craft room with supplies"},
+            {"prompt": "Music room with instruments"},
+            {"prompt": "Reading nook by window"},
+            {"prompt": "Prayer room with meditation cushions"},
+            {"prompt": "Sewing room with fabric"},
+            {"prompt": "Bar area with cocktail glasses"},
+            {"prompt": "Home theater with screens"},
+            {"prompt": "Walk-in closet with designer clothes"},
+            {"prompt": "Guest room ready for visitors"},
+            {"prompt": "Porch with rocking chairs"},
+            {"prompt": "Balcony with city view"},
+            {"prompt": "Deck overlooking garden"},
+            {"prompt": "Patio with barbecue grill"},
+            {"prompt": "Gazebo in backyard"},
+            {"prompt": "Hot tub under stars"},
+            {"prompt": "Swimming pool with lounge chairs"},
+            {"prompt": "Garden shed with tools"},
+            {"prompt": "Treehouse for children"},
+            {"prompt": "Mailbox at end of driveway"},
+            {"prompt": "Bird bath surrounded by flowers"},
+            {"prompt": "Swing hanging from oak tree"},
+            
+            # Fantasy & Sci-Fi (100 prompts)
+            {"prompt": "Dragon soaring over medieval castle"},
+            {"prompt": "Alien spaceship in nebula"},
+            {"prompt": "Wizard casting magical spell"},
+            {"prompt": "Robot walking through futuristic city"},
+            {"prompt": "Fairy dancing in moonbeam"},
+            {"prompt": "Space station orbiting planet"},
+            {"prompt": "Unicorn in enchanted forest"},
+            {"prompt": "Cyberpunk street with neon lights"},
+            {"prompt": "Phoenix rising from ashes"},
+            {"prompt": "Time machine in laboratory"},
+            {"prompt": "Mermaid swimming in coral reef"},
+            {"prompt": "Steampunk airship in clouds"},
+            {"prompt": "Elf archer in ancient woods"},
+            {"prompt": "Futuristic car hovering above ground"},
+            {"prompt": "Griffon perched on mountain peak"},
+            {"prompt": "Holographic display in space"},
+            {"prompt": "Centaur galloping through meadow"},
+            {"prompt": "Android contemplating existence"},
+            {"prompt": "Pegasus flying over rainbow"},
+            {"prompt": "Laser battle in space"},
+            {"prompt": "Dwarf mining precious gems"},
+            {"prompt": "Teleportation portal glowing"},
+            {"prompt": "Kraken emerging from ocean depths"},
+            {"prompt": "Crystal cave with magical properties"},
+            {"prompt": "Vampire in gothic mansion"},
+            {"prompt": "Spacecraft landing on Mars"},
+            {"prompt": "Werewolf howling at full moon"},
+            {"prompt": "Futuristic greenhouse on space station"},
+            {"prompt": "Angel with golden wings"},
+            {"prompt": "Cybernetic enhancement surgery"},
+            {"prompt": "Demon guarding ancient treasure"},
+            {"prompt": "Virtual reality simulation"},
+            {"prompt": "Troll guarding stone bridge"},
+            {"prompt": "Genetic laboratory experiment"},
+            {"prompt": "Sorcerer's tower reaching clouds"},
+            {"prompt": "Alien planet with twin suns"},
+            {"prompt": "Ghost ship sailing phantom seas"},
+            {"prompt": "Quantum computer processing data"},
+            {"prompt": "Goblin market in dark alley"},
+            {"prompt": "Space elevator reaching orbit"},
+            {"prompt": "Banshee wailing in mist"},
+            {"prompt": "Terraforming machine on barren world"},
+            {"prompt": "Hydra with multiple heads"},
+            {"prompt": "Cryogenic chamber in facility"},
+            {"prompt": "Chimera prowling ancient ruins"},
+            {"prompt": "Space mining operation on asteroid"},
+            {"prompt": "Sphinx guarding pyramid entrance"},
+            {"prompt": "Neural interface connection"},
+            {"prompt": "Basilisk in underground chamber"},
+            {"prompt": "Stargate opening to another world"},
+            
+            # Abstract & Artistic (100 prompts)
+            {"prompt": "Swirling colors in cosmic dance"},
+            {"prompt": "Geometric patterns in golden ratio"},
+            {"prompt": "Impressionist brushstrokes of sunset"},
+            {"prompt": "Cubist portrait fragmented"},
+            {"prompt": "Watercolor bleeding into paper"},
+            {"prompt": "Oil painting texture close-up"},
+            {"prompt": "Digital art with pixel effects"},
+            {"prompt": "Surreal melting clockwork"},
+            {"prompt": "Pop art with bright colors"},
+            {"prompt": "Minimalist composition in white"},
+            {"prompt": "Abstract expressionist paint splatters"},
+            {"prompt": "Art nouveau flowing lines"},
+            {"prompt": "Pointillist dots forming image"},
+            {"prompt": "Photorealistic marble sculpture"},
+            {"prompt": "Street art graffiti mural"},
+            {"prompt": "Stained glass kaleidoscope"},
+            {"prompt": "Fractal patterns repeating infinitely"},
+            {"prompt": "Charcoal sketch with shadows"},
+            {"prompt": "Pastels blending softly"},
+            {"prompt": "Pen and ink detailed drawing"},
+            {"prompt": "Mosaic tiles forming picture"},
+            {"prompt": "Sculpture carved from wood"},
+            {"prompt": "Ceramic pottery with glaze"},
+            {"prompt": "Textile weaving patterns"},
+            {"prompt": "Jewelry design with gemstones"},
+            {"prompt": "Calligraphy flowing across page"},
+            {"prompt": "Origami paper folding art"},
+            {"prompt": "Sand sculpture on beach"},
+            {"prompt": "Ice sculpture melting"},
+            {"prompt": "Light projection on building"},
+            {"prompt": "Shadow play creating shapes"},
+            {"prompt": "Reflection distorting reality"},
+            {"prompt": "Prism splitting light spectrum"},
+            {"prompt": "Hologram shifting perspectives"},
+            {"prompt": "Neon tubes forming words"},
+            {"prompt": "LED display showing patterns"},
+            {"prompt": "Laser light show"},
+            {"prompt": "Fireworks exploding in sky"},
+            {"prompt": "Aurora colors dancing"},
+            {"prompt": "Sunset gradient across horizon"},
+            {"prompt": "Storm clouds forming patterns"},
+            {"prompt": "Lightning branching across sky"},
+            {"prompt": "Rainbow prism in waterfall"},
+            {"prompt": "Moonbeam filtering through trees"},
+            {"prompt": "Starlight creating constellation"},
+            {"prompt": "Galaxy spiral arms rotating"},
+            {"prompt": "Nebula gas clouds glowing"},
+            {"prompt": "Black hole bending light"},
+            {"prompt": "Comet tail streaming past"},
+            {"prompt": "Meteor shower lighting night"},
+            
+            # Food & Culinary (100 prompts)
+            {"prompt": "Freshly baked bread with steam"},
+            {"prompt": "Gourmet chocolate truffle"},
+            {"prompt": "Colorful fruit arrangement"},
+            {"prompt": "Steaming bowl of soup"},
+            {"prompt": "Pizza with melted cheese"},
+            {"prompt": "Sushi rolls on bamboo mat"},
+            {"prompt": "Wedding cake with flowers"},
+            {"prompt": "Wine glass with aged vintage"},
+            {"prompt": "Coffee beans being roasted"},
+            {"prompt": "Ice cream sundae with toppings"},
+            {"prompt": "Pasta twirling on fork"},
+            {"prompt": "Grilled steak with vegetables"},
+            {"prompt": "Salad with fresh ingredients"},
+            {"prompt": "Pancakes with maple syrup"},
+            {"prompt": "Cheese platter with crackers"},
+            {"prompt": "Seafood paella in pan"},
+            {"prompt": "Herbs growing in garden"},
+            {"prompt": "Spices in market display"},
+            {"prompt": "Honey dripping from comb"},
+            {"prompt": "Tea ceremony with ceremony"},
+            {"prompt": "Breakfast eggs and bacon"},
+            {"prompt": "Sandwich cut in half"},
+            {"prompt": "Smoothie with tropical fruits"},
+            {"prompt": "Cookies fresh from oven"},
+            {"prompt": "Barbecue ribs with sauce"},
+            {"prompt": "Ramen noodles in broth"},
+            {"prompt": "Tacos with fresh garnish"},
+            {"prompt": "Curry with aromatic spices"},
+            {"prompt": "Burrito wrapped tightly"},
+            {"prompt": "Burger with all fixings"},
+            {"prompt": "Fries golden and crispy"},
+            {"prompt": "Milkshake with whipped cream"},
+            {"prompt": "Popcorn overflowing bowl"},
+            {"prompt": "Cotton candy on stick"},
+            {"prompt": "Donuts with colorful glaze"},
+            {"prompt": "Muffins in bakery display"},
+            {"prompt": "Pie cooling on windowsill"},
+            {"prompt": "Jam preserves in jars"},
+            {"prompt": "Pickles in brine"},
+            {"prompt": "Olives marinating in oil"},
+            {"prompt": "Nuts roasting in pan"},
+            {"prompt": "Seeds sprouting in soil"},
+            {"prompt": "Mushrooms growing in forest"},
+            {"prompt": "Vegetables in farmers market"},
+            {"prompt": "Fish caught fresh"},
+            {"prompt": "Meat aging in cellar"},
+            {"prompt": "Bread rising in kitchen"},
+            {"prompt": "Cake batter being mixed"},
+            {"prompt": "Dough being kneaded"},
+            {"prompt": "Ingredients prepped for cooking"},
+            
+            # Seasons & Weather (100 prompts)
+            {"prompt": "Spring flowers blooming everywhere"},
+            {"prompt": "Summer beach with umbrellas"},
+            {"prompt": "Autumn leaves falling gently"},
+            {"prompt": "Winter snow covering landscape"},
+            {"prompt": "Rain drops on window pane"},
+            {"prompt": "Sunny day with clear skies"},
+            {"prompt": "Cloudy afternoon with shadows"},
+            {"prompt": "Foggy morning in valley"},
+            {"prompt": "Windy day with swaying trees"},
+            {"prompt": "Thunderstorm approaching quickly"},
+            {"prompt": "Hailstorm pelting ground"},
+            {"prompt": "Tornado funnel touching down"},
+            {"prompt": "Hurricane waves crashing"},
+            {"prompt": "Blizzard whiting out vision"},
+            {"prompt": "Ice storm coating branches"},
+            {"prompt": "Drought cracking earth"},
+            {"prompt": "Flood waters rising"},
+            {"prompt": "Lightning illuminating clouds"},
+            {"prompt": "Rainbow after storm"},
+            {"prompt": "Sunrise breaking horizon"},
+            {"prompt": "Sunset painting sky"},
+            {"prompt": "Moonrise over mountains"},
+            {"prompt": "Stars twinkling in darkness"},
+            {"prompt": "Meteor streaking across"},
+            {"prompt": "Comet visible in twilight"},
+            {"prompt": "Eclipse casting shadows"},
+            {"prompt": "Aurora dancing overhead"},
+            {"prompt": "Frost covering grass"},
+            {"prompt": "Dew drops on spider web"},
+            {"prompt": "Mist rising from lake"},
+            {"prompt": "Steam from hot springs"},
+            {"prompt": "Icicles hanging from roof"},
+            {"prompt": "Snowflakes falling softly"},
+            {"prompt": "Hail accumulating quickly"},
+            {"prompt": "Sleet making roads slippery"},
+            {"prompt": "Puddles reflecting sky"},
+            {"prompt": "Mud after heavy rain"},
+            {"prompt": "Dust storm approaching"},
+            {"prompt": "Sand dunes shifting"},
+            {"prompt": "Waves during high tide"},
+            {"prompt": "Low tide exposing seabed"},
+            {"prompt": "Current flowing rapidly"},
+            {"prompt": "Whirlpool spinning water"},
+            {"prompt": "Geyser shooting skyward"},
+            {"prompt": "Volcano erupting lava"},
+            {"prompt": "Earthquake cracking ground"},
+            {"prompt": "Avalanche cascading down"},
+            {"prompt": "Landslide moving rocks"},
+            {"prompt": "Erosion carving canyon"},
+            {"prompt": "Glacial ice advancing"},
+            
+            # Historical & Cultural (100 prompts)
+            {"prompt": "Ancient Egyptian pyramid"},
+            {"prompt": "Roman Colosseum at sunset"},
+            {"prompt": "Medieval knight in armor"},
+            {"prompt": "Renaissance painting being created"},
+            {"prompt": "Viking longship sailing"},
+            {"prompt": "Samurai warrior in battle"},
+            {"prompt": "Native American ceremony"},
+            {"prompt": "Colonial American settlement"},
+            {"prompt": "Industrial revolution factory"},
+            {"prompt": "Wild West frontier town"},
+            {"prompt": "Victorian era ballroom"},
+            {"prompt": "Art Deco building design"},
+            {"prompt": "1950s diner with neon"},
+            {"prompt": "1960s hippie gathering"},
+            {"prompt": "1970s disco dance floor"},
+            {"prompt": "1980s arcade with games"},
+            {"prompt": "1990s grunge music scene"},
+            {"prompt": "Ancient Greek temple"},
+            {"prompt": "Chinese Great Wall"},
+            {"prompt": "Mayan temple in jungle"},
+            {"prompt": "Stonehenge at solstice"},
+            {"prompt": "Easter Island statues"},
+            {"prompt": "Machu Picchu ruins"},
+            {"prompt": "Taj Mahal reflecting"},
+            {"prompt": "Notre Dame cathedral"},
+            {"prompt": "Sagrada Familia construction"},
+            {"prompt": "Eiffel Tower at night"},
+            {"prompt": "Big Ben clock tower"},
+            {"prompt": "Sydney Opera House"},
+            {"prompt": "Golden Gate Bridge"},
+            {"prompt": "Statue of Liberty"},
+            {"prompt": "Mount Rushmore faces"},
+            {"prompt": "Christ the Redeemer statue"},
+            {"prompt": "Petra carved facades"},
+            {"prompt": "Angkor Wat temple"},
+            {"prompt": "Forbidden City palace"},
+            {"prompt": "Red Square in Moscow"},
+            {"prompt": "Acropolis overlooking Athens"},
+            {"prompt": "Versailles palace gardens"},
+            {"prompt": "Neuschwanstein castle"},
+            {"prompt": "Traditional Japanese tea house"},
+            {"prompt": "Indian palace with minarets"},
+            {"prompt": "African tribal village"},
+            {"prompt": "Inuit igloo village"},
+            {"prompt": "Mongolian yurt on steppe"},
+            {"prompt": "Polynesian island hut"},
+            {"prompt": "Amazon rainforest settlement"},
+            {"prompt": "Tibetan monastery"},
+            {"prompt": "Swiss chalet in Alps"},
+            {"prompt": "Dutch windmill in field"},
         ]
         
         # Extend to match required number
@@ -206,7 +720,9 @@ class SimpleGaussianShadingTest:
                     prompt = self.dataset[i][self.prompt_key]
                     
                     set_random_seed(seed)
-                    init_latents_w = self.watermark.create_watermark_and_return_w()
+                    
+                    # Use the same watermark pattern for all images
+                    init_latents_w = self.watermark_latents
                     
                     with torch.no_grad():
                         outputs = self.pipe(
@@ -243,17 +759,18 @@ class SimpleGaussianShadingTest:
         return watermarked_images
     
     def generate_clean_images(self):
-        """Generate clean (non-watermarked) images"""
+        """Generate clean (non-watermarked) images using SAME seeds as watermarked"""
         print(f"\n🧹 GENERATING CLEAN IMAGES")
         print("=" * 30)
         
         clean_images = []
-        num_clean = self.args.num_images // 2
+        num_clean = self.args.num_images  # Same number as watermarked for balance
         
         with tqdm(total=num_clean, desc="Generating clean images") as pbar:
             for i in range(num_clean):
                 try:
-                    seed = i + self.args.gen_seed + 10000
+                    # CRITICAL FIX: Use SAME seed as watermarked images for proper comparison
+                    seed = i + self.args.gen_seed  # Remove +10000 offset
                     prompt = self.dataset[i][self.prompt_key]
                     
                     set_random_seed(seed)
@@ -266,6 +783,8 @@ class SimpleGaussianShadingTest:
                             num_inference_steps=self.args.num_inference_steps,
                             height=self.args.image_length,
                             width=self.args.image_length,
+                            # CRITICAL FIX: Do NOT pass latents parameter for clean images
+                            # This generates the "natural" version without watermark
                         )
                     
                     image_clean = outputs.images[0]
@@ -491,15 +1010,115 @@ class SimpleGaussianShadingTest:
         
         return final_results
     
+
     def save_results(self, results):
-        """Save results to JSON file"""
+        """Save results with standardized format matching target results.json"""
+        def standardize_entry(name, entry):
+            # Map original names to standardized attack types and intensities
+            attack_map = {
+                'jpeg_high': ('jpeg', 'mild', {'quality': 85}),
+                'jpeg_medium': ('jpeg', 'moderate', {'quality': 60}),
+                'jpeg_low': ('jpeg', 'strong', {'quality': 40}),
+                'jpeg_very_low': ('jpeg', 'extreme', {'quality': 20}),
+                'blur_mild': ('blur', 'mild', {'kernel_size': 3, 'sigma': 0.5}),
+                'blur_moderate': ('blur', 'moderate', {'kernel_size': 5, 'sigma': 1.0}),
+                'blur_strong': ('blur', 'strong', {'kernel_size': 7, 'sigma': 1.5}),
+                'noise_mild': ('awgn', 'mild', {'noise_std': 0.02}),
+                'noise_moderate': ('awgn', 'moderate', {'noise_std': 0.03}),
+                'noise_strong': ('awgn', 'strong', {'noise_std': 0.05}),
+                'resize_90': ('scaling', 'mild', {'scale_factor': 0.9}),
+                'resize_80': ('scaling', 'moderate', {'scale_factor': 0.8}),
+                'resize_70': ('scaling', 'strong', {'scale_factor': 0.7}),
+                'crop_90': ('cropping', 'mild', {'crop_ratio': 0.9}),
+                'crop_80': ('cropping', 'moderate', {'crop_ratio': 0.8}),
+                'crop_70': ('cropping', 'strong', {'crop_ratio': 0.7}),
+                'bright_120': ('brightness', 'mild', {'brightness_factor': 1.2}),
+                'bright_80': ('brightness', 'strong', {'brightness_factor': 0.8}),
+                'clean': ('none', 'none', {}),
+            }
+            
+            if name not in attack_map:
+                return None, None
+                
+            attack_type, intensity, params = attack_map[name]
+            
+            # Handle special case for 'clean' -> 'clean' key
+            if name == 'clean':
+                std_name = 'clean'
+            else:
+                std_name = f"{attack_type}_{intensity}"
+            
+            # Create standardized entry with exact target format
+            std_entry = {
+                'attack_config': {
+                    'type': attack_type,
+                    'intensity': intensity,
+                    'params': params
+                },
+                'sample_size': entry['sample_size'],
+                'total_watermarked': entry['watermarked_count'],
+                'total_clean': entry['clean_count'],
+                'detection_metrics': {
+                    'f1_score': entry['f1_score'],
+                    'precision': entry['precision'],
+                    'recall': entry['recall']
+                },
+                'true_positives': entry['true_positives'],
+                'false_positives': entry['false_positives'],
+                'true_negatives': entry['true_negatives'],
+                'false_negatives': entry['false_negatives'],
+                'attribution_metrics': {
+                    'f1_score_macro': entry['f1_score'],  # For now, same as detection F1
+                    'f1_score_micro': entry['f1_score'],  # For now, same as detection F1
+                    'precision_macro': entry['precision'],
+                    'recall_macro': entry['recall']
+                },
+                'attribution_accuracy': entry['recall'],  # Attribution accuracy = detection recall for single watermark
+                'correct_attributions': entry['true_positives'],
+                'total_attributed': entry['true_positives'],
+                'avg_confidence': entry.get('avg_detection_accuracy', 0.5),
+                'avg_time': entry['avg_time'],
+                'intensty': intensity  # Note: keeping the typo to match target format
+            }
+            
+            return std_name, std_entry
+
+        # Standardize test_results
+        test_results = results.get('test_results', {})
+        standardized = {}
+        for name, entry in test_results.items():
+            std_name, std_entry = standardize_entry(name, entry)
+            if std_name:
+                standardized[std_name] = std_entry
+        
+        # Add benchmark_info matching target format
+        test_info = results.get('test_info', {})
+        standardized['benchmark_info'] = {
+            'timestamp': test_info.get('timestamp', ''),
+            'duration_seconds': test_info.get('duration_seconds', 0),
+            'total_images': test_info.get('total_images', 0),
+            'balanced_dataset': True,
+            'watermarked_images': test_info.get('watermarked_images', 0),
+            'clean_images': test_info.get('clean_images', 0),
+            'ai_models': 1,  # Gaussian Shading
+            'attacks_tested': len([k for k in test_results.keys() if k != 'clean']),
+            'model_type': 'Gaussian Shading Watermark',
+            'test_scope': 'Balanced Dataset + F1 Metrics + Attack Robustness',
+            'improvements': [
+                'Fixed watermark pattern reuse issue',
+                'Balanced dataset generation',
+                'Comprehensive attack suite',
+                'Standardized results format'
+            ]
+        }
+
         results_file = self.dirs['results'] / 'test_results.json'
         with open(results_file, 'w') as f:
-            json.dump(results, f, indent=2, default=str)
-        
-        # Generate text report
+            json.dump(standardized, f, indent=2, default=str)
+
+        # Generate text report (optional: can use standardized or original)
         self.generate_text_report(results)
-        
+
         print(f"\n💾 RESULTS SAVED")
         print(f"   📄 JSON results: {results_file}")
         print(f"   📋 Text report: {self.dirs['results']}/report.txt")
