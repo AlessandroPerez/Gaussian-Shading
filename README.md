@@ -216,3 +216,7 @@ If you find our work useful for your research, please consider citing the follow
 }
 
 ```
+
+```
+conda activate gs && PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 1000 --output_path ./final_results/
+```
