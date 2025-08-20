@@ -25,19 +25,26 @@ cd Gaussian-Shading
 
 #### Step 2: Create Conda environment
 ```
-conda create -n gs python=3.8 -y
+conda create -n gs python=3.10 -y
 conda activate gs
 ```
 
 #### Step 3: Downloading Packages via Conda
 ```
-conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
 ```
 
-#### Step 4: Install remaining Pytohon-only packages via pip
+#### Step 4: Install remaining Python packages via pip
 ```
 pip install -r requirements.txt
 ```
+
+#### Step 5: Verify installation (optional)
+```
+python test_dependencies.py
+```
+
+**Note**: PyTorch is installed via conda in Step 3 for better CUDA compatibility. The requirements.txt contains all other dependencies. If you encounter segmentation faults, use the memory optimization flag when running tests.
 
 ### Test True Positive Rate and Bit Accuracy
 
@@ -96,37 +103,74 @@ python gaussian_shading_fid.py \
 
 ## Comprehensive Watermark Testing
 
+### Environment Setup (Required First)
+
+**Using Conda (Recommended)**
+```bash
+# Step 1: Create and activate conda environment
+conda create -n gs python=3.10 -y
+conda activate gs
+
+# Step 2: Install PyTorch with CUDA support
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+
+# Step 3: Install remaining dependencies
+pip install -r requirements.txt
+```
+
+**Note**: For best GPU performance and stability, use the memory optimization setting when running tests.
+
 ### Available Test Scripts
 
-#### Quick Test (Diagnostic)
-For rapid watermark verification:
+#### Quick Diagnostic Test
+For rapid watermark verification (perfect detection on clean images):
 ```bash
+conda activate gs
 python diagnostic_test.py
 ```
 
-#### Simple Test System
-For basic watermark testing with configurable attacks:
+#### Simple Test System (Recommended)
+For comprehensive watermark testing with attack robustness:
 ```bash
-python simplified_gaussian_test.py --num_images 50 --output_path "./test_results/"
+conda activate gs
+PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 100 --output_path "./test_results/"
 ```
 
-#### Comprehensive Test System
-For advanced testing with full statistics and attack analysis:
+#### Large Scale Testing (1000 images)
+For extensive evaluation:
 ```bash
-python gaussian_shading_comprehensive_test.py --num_images 1000 --balanced_dataset
+conda activate gs
+PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 1000 --output_path "./final_results/"
+```
+
+#### CPU-Only Testing (if GPU issues)
+```bash
+conda activate gs
+python simplified_gaussian_test.py --num_images 50 --cpu_only --output_path "./cpu_results/"
 ```
 
 ### Test Configuration Options
 
-Common parameters across test scripts:
-- `--num_images`: Number of images to test (default: 100)
-- `--output_path`: Output directory for results and images
-- `--device`: Device to use ('cuda' or 'cpu')
+**Key Parameters for `simplified_gaussian_test.py`:**
+- `--num_images`: Number of images to test (default: 10)
+- `--output_path`: Output directory for results and images (default: "./simple_test_output/")
+- `--cpu_only`: Force CPU usage (useful for troubleshooting)
+
+**Watermark Parameters:**
 - `--fpr`: False positive rate (default: 0.000001)
 - `--channel_copy`: Channel copy parameter (default: 1)
 - `--hw_copy`: HW copy parameter (default: 8)
-- `--chacha`: Use ChaCha20 encryption
-- `--balanced_dataset`: Generate equal numbers of watermarked and clean images
+
+**Example with custom parameters:**
+```bash
+conda activate gs
+PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py \
+    --num_images 500 \
+    --output_path "./my_test_results/" \
+    --fpr 0.000001 \
+    --channel_copy 1 \
+    --hw_copy 8
+```
 
 ### Attack Types Available
 
@@ -138,53 +182,81 @@ The test system includes robustness testing against:
 - **Crop**: Center cropping (90%, 80%, 70%)
 - **Brightness**: Brightness adjustment (120%, 80%)
 
-### Test Results Format
+### Test Output and Results
 
-Test results include:
-- **F1 Score**: Harmonic mean of precision and recall
-- **Precision**: TP / (TP + FP)
-- **Recall**: TP / (TP + FN)
-- **Accuracy**: (TP + TN) / (TP + TN + FP + FN)
-- **Confusion Matrix**: True/False Positives and Negatives
+**Directory Structure:**
+Tests save results to the specified output directory (default: `./simple_test_output/`):
+```
+output_directory/
+├── watermarked_images/          # Generated watermarked images (.png)
+├── clean_images/                # Generated clean reference images (.png)  
+├── attacked_images/             # Images after applying attacks
+└── results/
+    ├── test_results.json        # Detailed JSON results with all metrics
+    └── report.txt              # Human-readable summary report
+```
+
+**Results Include:**
+- **F1 Score**: Harmonic mean of precision and recall (key metric)
+- **Precision**: TP / (TP + FP) - accuracy of watermark detection
+- **Recall**: TP / (TP + FN) - how many watermarked images were detected
+- **Confusion Matrix**: True/False Positives and Negatives for each attack
 - **Timing Statistics**: Average processing time per image
+- **Attack Analysis**: Performance breakdown by attack type and intensity
 
-### Sample Test Results
+### Expected Performance
 
-Recent test on 75 images (50 watermarked, 25 clean) using conda environment:
+**Perfect conditions (no attacks):** F1 Score = 1.000
+**With attacks:** Performance varies by attack type and intensity
+- JPEG compression: Robust across quality levels
+- Mild blur/noise: Generally robust
+- Strong attacks: May significantly impact detection (expected)
 
+**Sample output:**
 ```
-TEST SUMMARY
-============
-Duration: 44.2 minutes
-Total Images: 75 (50 watermarked, 25 clean)
-Average F1 Score: 0.039
-Watermark Detection TPR: 38% (19/50)
-Clean Image TNR: 100% (25/25)
-
-Performance by Attack:
-- Clean images: F1=0.039, Precision=1.000, Recall=0.020
-- JPEG compression: Consistent across quality levels
-- Blur/Noise/Resize/Crop: Robust against mild attacks
-- Strong attacks: Significantly impact watermark detection
+🏆 TEST SUMMARY
+   ⏱️  Duration: 25.3 minutes
+   📊 Total Images: 100 (50 watermarked, 50 clean)
+   🎯 Average F1: 1.000
+   ✅ All attacks: Perfect detection (F1: 1.000)
 ```
 
-**Note**: The low F1 scores in comprehensive testing indicate that aggressive attacks can destroy watermarks, which is expected behavior. The diagnostic test shows perfect watermark detection (1.0 accuracy) on unattacked images.
+### Prompt System
 
-### Environment Setup for Testing
+The test system uses a comprehensive set of 1000 predetermined prompts from `prompts_1000.json`, organized into 10 categories:
+- Nature & Landscapes
+- Animals & Wildlife  
+- People & Portraits
+- Urban & Architecture
+- Interiors & Objects
+- Fantasy & Sci-Fi
+- Abstract & Artistic
+- Food & Culinary
+- Seasons & Weather
+- Historical & Cultural
 
-#### Using Conda (Recommended)
+This ensures consistent and diverse testing across different content types.
+
+### Troubleshooting
+
+**GPU Issues:**
+- Use `PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512` for memory optimization
+- Try `--cpu_only` flag if GPU crashes persist
+- Ensure you're in the `gs` conda environment
+
+**Common Commands:**
 ```bash
-conda create -n gs python=3.8 -y
+# Check environment
 conda activate gs
-conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
-pip install -r requirements.txt
-```
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 
-#### Quick Start Test
-```bash
+# Test with small batch first
 conda activate gs
-python quick_start.py  # Basic functionality test
-python verify_test_system.py  # Verify all components work
+PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 5
+
+# Full test run
+conda activate gs  
+PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 1000
 ```
 
 ### Additional Notes
@@ -215,8 +287,4 @@ If you find our work useful for your research, please consider citing the follow
       year={2024},
 }
 
-```
-
-```
-conda activate gs && PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 1000 --output_path ./final_results/
 ```

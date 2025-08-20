@@ -1,38 +1,35 @@
-# PyTorch and related
-torch==1.13.0
-torchvision==0.14.0
-torchaudio==0.13.0
+# Core ML packages (installed via conda)
+# torch>=2.0.0
+# torchvision>=0.15.0  
+# torchaudio>=0.13.0
 
 # Core packages
-numpy==1.24.4
-scipy>=1.10.0,<1.11
-scikit-image==0.20.0
-Pillow==10.3.0
-matplotlib==3.7.5
+numpy>=1.24.0
+scipy>=1.10.0
+Pillow>=10.0.0
+matplotlib>=3.7.0
 
-# Deep learning & utilities
-pytorch_lightning==2.2.1
-transformers==4.34.0
-diffusers==0.11.1
-einops==0.4.1
-timm==0.5.4
-kornia==0.6.4
-albumentations==1.4.3
-ftfy==6.2.0
-omegaconf==2.3.0
+# Deep learning & diffusion models
+diffusers>=0.21.0
+transformers>=4.30.0
+einops>=0.6.0
 
-# Datasets & repositories
-datasets==2.18.0
-huggingface_hub==0.22.2
-academictorrents==2.3.3
-clip==0.2.0
+# Image processing
+torchvision>=0.15.0
+
+# Cryptography
+pycryptodome>=3.20.0
 
 # Utilities
-pycryptodome==3.20.0
-requests==2.31.0
-regex==2023.12.25
-PyYAML==6.0.1
-typing_extensions==4.11.0
-natsort==8.4.0
-more_itertools==10.2.0
-tqdm==4.66.2
+tqdm>=4.65.0
+requests>=2.28.0
+PyYAML>=6.0.0
+
+# Optional packages for extended functionality
+# datasets>=2.10.0        # For advanced dataset loading
+# huggingface_hub>=0.15.0 # For model hub access
+# timm>=0.9.0             # For additional vision models
+# kornia>=0.6.0           # For geometric transformations  
+# albumentations>=1.3.0   # For advanced augmentations
+# scikit-image>=0.19.0    # For image processing
+# opencv-python>=4.5.0    # For computer vision operations
