@@ -54,7 +54,16 @@ def main():
     try:
         # Test torch import without triggering GPU initialization
         import torch
-        print(f"✅ PyTorch {torch.__version__}")
+        version = torch.__version__
+        print(f"✅ PyTorch {version}")
+        
+        # Check version compatibility for transformers
+        from packaging import version as pkg_version
+        if pkg_version.parse(version.split('+')[0]) >= pkg_version.parse('2.6.0'):
+            print(f"✅ PyTorch version compatible with transformers security requirements")
+        else:
+            print(f"⚠️ PyTorch {version} < 2.6.0 - may have compatibility issues with latest transformers")
+            print(f"   Consider upgrading: conda update pytorch -c pytorch")
         
         # Test CUDA availability (but don't create tensors)
         if hasattr(torch.cuda, 'is_available'):

@@ -31,7 +31,12 @@ conda activate gs
 
 #### Step 3: Downloading Packages via Conda
 ```
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+# Install PyTorch 2.6+ with CUDA support (required for security compliance)
+# This ensures compatibility with the latest transformers library
+conda install "pytorch>=2.6" torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+
+# Alternative: Install the latest PyTorch (recommended)
+# conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
 ```
 
 #### Step 4: Install remaining Python packages via pip
@@ -111,8 +116,8 @@ python gaussian_shading_fid.py \
 conda create -n gs python=3.10 -y
 conda activate gs
 
-# Step 2: Install PyTorch with CUDA support
-conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
+# Step 2: Install PyTorch with CUDA support (version 2.6+ required)
+conda install "pytorch>=2.6" torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia -y
 
 # Step 3: Install remaining dependencies
 pip install -r requirements.txt
@@ -238,6 +243,17 @@ The test system uses a comprehensive set of 1000 predetermined prompts from `pro
 This ensures consistent and diverse testing across different content types.
 
 ### Troubleshooting
+
+**PyTorch Version Issues:**
+If you get an error about `torch.load` requiring PyTorch 2.6+:
+```bash
+# Update PyTorch to the latest version
+conda activate gs
+conda update pytorch torchvision pytorch-cuda -c pytorch -c nvidia
+
+# Or install specific version 2.6+
+conda install "pytorch>=2.6" torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
+```
 
 **GPU Issues:**
 - Use `PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512` for memory optimization
