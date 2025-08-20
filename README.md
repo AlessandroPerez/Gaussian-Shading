@@ -255,8 +255,17 @@ conda update pytorch torchvision pytorch-cuda -c pytorch -c nvidia
 conda install "pytorch>=2.6" torchvision pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
+**Diffusers Compatibility Issues:**
+If you get an error like `'bool' object has no attribute '__module__'`:
+```bash
+# Install compatible versions
+conda activate gs
+pip install "diffusers>=0.21.0,<0.30.0" "transformers>=4.30.0,<4.40.0"
+```
+
 **GPU Issues:**
-- Use `PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512` for memory optimization
+- For GPUs with limited VRAM (8GB or less): Use `PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512`
+- For high-end GPUs (A100, H100, etc.): Memory optimization usually not needed
 - Try `--cpu_only` flag if GPU crashes persist
 - Ensure you're in the `gs` conda environment
 
@@ -268,11 +277,15 @@ python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 
 # Test with small batch first
 conda activate gs
+python simplified_gaussian_test.py --num_images 5
+
+# For limited VRAM GPUs (8GB or less)
+conda activate gs
 PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 5
 
-# Full test run
+# For high-end GPUs (A100, H100, etc.) - no memory flags needed
 conda activate gs  
-PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512 python simplified_gaussian_test.py --num_images 1000
+python simplified_gaussian_test.py --num_images 1000
 ```
 
 ### Additional Notes

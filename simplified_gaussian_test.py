@@ -68,16 +68,18 @@ class SimpleGaussianShadingTest:
                     self.args.model_path,
                     scheduler=scheduler,
                     torch_dtype=torch.float16,
-                    revision='fp16',
+                    safety_checker=None,
+                    requires_safety_checker=False,
                 )
             else:
                 self.pipe = InversableStableDiffusionPipeline.from_pretrained(
                     self.args.model_path,
                     scheduler=scheduler,
                     torch_dtype=torch.float32,
+                    safety_checker=None,
+                    requires_safety_checker=False,
                 )
             
-            self.pipe.safety_checker = None
             self.pipe = self.pipe.to(self.device)
             
         except Exception as e:

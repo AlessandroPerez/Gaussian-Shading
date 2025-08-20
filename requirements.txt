@@ -11,8 +11,8 @@ matplotlib>=3.7.0
 packaging>=21.0
 
 # Deep learning & diffusion models
-diffusers>=0.21.0
-transformers>=4.30.0
+diffusers>=0.21.0,<0.30.0
+transformers>=4.30.0,<4.40.0
 einops>=0.6.0
 
 # Dataset loading (required for optim_utils.py)
