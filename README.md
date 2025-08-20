@@ -260,7 +260,28 @@ If you get an error like `'bool' object has no attribute '__module__'`:
 ```bash
 # Install compatible versions
 conda activate gs
-pip install "diffusers>=0.21.0,<0.30.0" "transformers>=4.30.0,<4.40.0"
+pip install "diffusers>=0.21.0,<0.30.0" "transformers>=4.30.0,<4.40.0" accelerate
+
+# If still failing, try CPU mode first
+python simplified_gaussian_test.py --cpu_only --num_images 1
+```
+
+**CUDA Driver Issues:**
+If you see "NVIDIA driver on your system is too old":
+```bash
+# Check CUDA version
+nvidia-smi
+
+# Update NVIDIA drivers (requires admin/sudo)
+# Or install compatible PyTorch version:
+conda install pytorch torchvision pytorch-cuda=11.7 -c pytorch -c nvidia
+```
+
+**Missing Accelerate Package:**
+If you see "accelerate was not found":
+```bash
+conda activate gs
+pip install accelerate
 ```
 
 **GPU Issues:**

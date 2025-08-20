@@ -28,8 +28,8 @@ class ModifiedStableDiffusionPipeline(StableDiffusionPipeline):
         tokenizer,
         unet,
         scheduler,
-        safety_checker,
-        feature_extractor,
+        safety_checker=None,
+        feature_extractor=None,
         requires_safety_checker: bool = False,
     ):
         super(ModifiedStableDiffusionPipeline, self).__init__(vae,
