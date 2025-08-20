@@ -14,6 +14,10 @@ diffusers>=0.21.0
 transformers>=4.30.0
 einops>=0.6.0
 
+# Dataset loading (required for optim_utils.py)
+datasets>=2.10.0
+huggingface_hub>=0.15.0
+
 # Image processing
 torchvision>=0.15.0
 
